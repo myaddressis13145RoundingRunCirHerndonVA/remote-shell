@@ -8,7 +8,24 @@ function getShell() {
   return "bash";
 }
 
-const server = http.createServer();
+constconst server = http.createServer((req, res) => {
+  // Serve index.html for root
+  if (req.url === "/" || req.url === "/index.html") {
+    const file = path.join(process.cwd(), "index.html");
+    fs.readFile(file, (err, data) => {
+      if (err) {
+        res.writeHead(500);
+        res.end("Error loading file");
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.end(data);
+    });
+  } else {
+    res.writeHead(404);
+    res.end("Not found");
+  }
+});
 const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
