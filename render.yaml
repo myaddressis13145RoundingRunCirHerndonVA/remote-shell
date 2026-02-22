@@ -1,0 +1,6 @@
+ services:
+  - type: web
+    name: command-prompt
+    env: node
+    plan: free
+    startCommand: npm install && node index.js

@@ -1,4 +1,6 @@
 import http from "node:http";
+import fs from "fs";
+import path from "path";
 import { WebSocketServer } from "ws";
 import pty from "node-pty";
 
@@ -8,7 +10,7 @@ function getShell() {
   return "bash";
 }
 
-constconst server = http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   // Serve index.html for root
   if (req.url === "/" || req.url === "/index.html") {
     const file = path.join(process.cwd(), "index.html");
