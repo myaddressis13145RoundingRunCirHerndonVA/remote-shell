@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css">
+
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  background: black;
+}
+#terminal {
+  height: 100%;
+}
+</style>
+</head>
+<body>
+
+<div id="terminal"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+
+<script>
+const term = new Terminal({
+  cursorBlink: true,
+  fontFamily: "Consolas, monospace",
+  fontSize: 14,
+  theme: { background: "#000000" }
+});
+
+term.open(document.getElementById("terminal"));
+
+const ws = new WebSocket(location.origin.replace("http", "ws"));
+
+ws.onmessage = (e) => {
+  term.write(e.data);
+};
+
+term.onData(data => {
+  ws.send(data);
+});
+
+window.addEventListener("resize", () => {
+  ws.send("RESIZE:" + JSON.stringify({
+    cols: term.cols,
+    rows: term.rows
+  }));
+});
+</script>
+
+</body>
+</html>
